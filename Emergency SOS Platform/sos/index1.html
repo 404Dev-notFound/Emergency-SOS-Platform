@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RapidResponse - SOS Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="bg-red-600 p-2 rounded-lg">
+            ⚠️
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-gray-900">RapidResponse</h1>
+            <p class="text-xs text-gray-500">Emergency SOS Platform</p>
+          </div>
+        </div>
+        <button id="signinBtn" class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
+          🔑 Sign In
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Section -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+    <h2 class="text-4xl font-bold text-gray-900 mb-4">Emergency Response Platform</h2>
+    <p class="text-xl text-gray-600 mb-8">
+      Connecting people in emergencies with verified responders in real-time
+    </p>
+    <button id="getStarted" class="inline-flex items-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg transition-colors">
+      SOS
+    </button>
+
+    <!-- Feature Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-12 text-left">
+      <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div class="bg-red-50 p-3 rounded-lg w-fit mb-4">🚨</div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Instant SOS Alerts</h3>
+        <p class="text-gray-600">
+          One-tap emergency alerts with GPS location sharing to notify nearby responders instantly.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div class="bg-blue-50 p-3 rounded-lg w-fit mb-4">🗺️</div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Real-Time Mapping</h3>
+        <p class="text-gray-600">
+          Live tracking of emergencies and responders with intelligent routing for fastest response.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div class="bg-green-50 p-3 rounded-lg w-fit mb-4">🤝</div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Verified Network</h3>
+        <p class="text-gray-600">
+          Trusted volunteers, NGOs, and emergency services verified and ready to help.
+        </p>
+      </div>
+    </div>
+
+    <!-- AI Verification Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-6 text-white">
+      <h3 class="text-lg font-bold mb-2">AI-Powered Verification</h3>
+      <p class="text-blue-100 text-sm max-w-2xl mx-auto">
+        Our platform uses advanced anomaly detection to filter spam and false alerts, ensuring that responders
+        can focus on real emergencies. Each alert is assigned a verification score based on location patterns,
+        user history, and real-time validation.
+      </p>
+    </div>
+  </main>
+
+  <!-- Emergency Button -->
+  <div class="fixed bottom-6 right-6">
+    <button id="sosBtn" class="bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-full shadow-lg text-lg font-bold transition">
+      🚨 SEND SOS
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <p class="text-sm text-gray-600 text-center">
+        RapidResponse - Emergency SOS Platform for coordinated disaster response
+      </p>
+    </div>
+  </footer>
+
+  <!-- JS (Demo Simulation) -->
+  <script>
+    document.getElementById("signinBtn").addEventListener("click", () => {
+      alert("Sign In modal would open here (React AuthModal in real app).");
+    });
+
+    document.getElementById("getStarted").addEventListener("click", () => {
+      alert("Redirecting to sign-in or main app dashboard...");
+    });
+
+    document.getElementById("sosBtn").addEventListener("click", () => {
+      alert("🚨 SOS alert sent! Responders are being notified...");
+    });
+  </script>
+</body>
+</html>

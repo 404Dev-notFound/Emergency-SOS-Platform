@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RapidResponse - SOS Platform (Enhanced)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Leaflet CSS + JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+<style>
+  :root{ --page-max-w:1200px; }
+  .feature-box { transition: all 0.28s cubic-bezier(.2,.9,.2,1); cursor:pointer; }
+  .feature-box:hover { transform: translateY(-6px); box-shadow: 0 10px 22px rgba(2,6,23,0.08); border-color: #3b82f6; }
+  #map { height: 72vh; width: 100%; border-radius: 12px; }
+  .leaflet-container { border-radius: 12px; }
+  .user-marker { display:inline-block; width:14px; height:14px; border-radius:9999px; border:3px solid white; background:#ef4444; box-shadow:0 0 0 0 rgba(239,68,68,0.35); animation: pulseMarker 1.6s infinite ease-out; }
+  @keyframes pulseMarker { 0% { box-shadow:0 0 0 0 rgba(239,68,68,0.35); transform: scale(1); } 70% { box-shadow:0 0 0 18px rgba(239,68,68,0); transform: scale(1.05); } 100% { box-shadow:0 0 0 0 rgba(239,68,68,0); transform: scale(1); } }
+  .toast-container { position: fixed; right: 18px; top: 18px; z-index: 60; display:flex; flex-direction:column; gap:8px; }
+  .toast { min-width: 220px; padding:10px 14px; border-radius:10px; box-shadow: 0 8px 20px rgba(2,6,23,0.08); color:white; font-weight:600; }
+  .toast-success { background: linear-gradient(90deg,#10b981,#059669); }
+  .toast-info { background: linear-gradient(90deg,#3b82f6,#2563eb); }
+  .toast-error { background: linear-gradient(90deg,#ef4444,#dc2626); }
+  .modal-backdrop { background: rgba(2,6,23,0.45); backdrop-filter: blur(2px); }
+  @media (max-width:640px){ #map { height: 56vh; } }
+</style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col text-gray-800">
+<div id="toastHolder" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- MAIN PAGE -->
+<section id="mainPage">
+  <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="bg-red-600 p-2 rounded-lg text-white font-bold">⚠</div>
+          <div>
+            <h1 class="text-xl font-bold text-gray-900">RapidResponse</h1>
+            <p class="text-xs text-gray-500">Emergency SOS Platform</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="signinBtn" class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">
+            Sign In
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+    <h2 class="text-4xl font-bold text-gray-900 mb-4">Emergency Response Platform</h2>
+    <p class="text-xl text-gray-600 mb-8">Connecting people in emergencies with verified responders in real-time</p>
+
+    <button id="getStarted" class="inline-flex items-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg transition-colors focus:outline-none focus:ring-4 focus:ring-red-300 animate-pulse">
+      🚨 SOS
+    </button>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-12 text-left">
+      <div id="featureSOS" class="feature-box bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div class="bg-red-50 p-3 rounded-lg w-fit mb-4">🚨</div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Instant SOS Alerts</h3>
+        <p class="text-gray-600">One-tap emergency alerts with GPS location sharing to notify nearby responders instantly.</p>
+      </div>
+      <div id="featureMap" class="feature-box bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div class="bg-blue-50 p-3 rounded-lg w-fit mb-4">🗺</div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Real-Time Mapping</h3>
+        <p class="text-gray-600">Live tracking of emergencies and responders with intelligent routing for fastest response.</p>
+      </div>
+      <div id="featureVerify" class="feature-box bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div class="bg-green-50 p-3 rounded-lg w-fit mb-4">🤝</div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Verified Network</h3>
+        <p class="text-gray-600">Trusted volunteers, NGOs, and emergency services verified and ready to help.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 mt-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-600">
+RapidResponse - Coordinated disaster response
+</div>
+</footer>
+</section>
+
+<!-- SIGN-IN PAGE -->
+<section id="signinPage" class="hidden flex items-center justify-center min-h-screen bg-gray-50 relative" aria-hidden="true">
+  <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHome1" role="button" tabindex="0">⬅ <span class="font-medium text-gray-600">Back</span></div>
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 space-y-6">
+    <h2 class="text-2xl font-bold text-center mb-4">Sign In</h2>
+    <form id="signinForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Email</label>
+        <input id="signinEmail" type="email" required class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter your email" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input id="signinPass" type="password" required class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter your password" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Attach Valid Govt ID Proof</label>
+        <input id="idProof" type="file" accept=".jpg,.jpeg,.png,.pdf" class="w-full border border-gray-300 rounded-md p-2" />
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition" aria-label="Sign in">Sign In</button>
+    </form>
+  </div>
+</section>
+
+<!-- SOS PAGE with countdown modal -->
+<section id="sosPage" class="hidden flex items-center justify-center min-h-screen bg-gray-100 relative" aria-hidden="true">
+  <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHome2" role="button" tabindex="0">⬅ <span class="font-medium text-gray-600">Back</span></div>
+  <div class="bg-white shadow-lg rounded-2xl w-full max-w-md p-6">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="text-2xl">🚨</span>
+      <h2 class="text-xl font-semibold text-gray-900">Emergency SOS</h2>
+    </div>
+
+    <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Type</label>
+    <select id="emType" class="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-red-500">
+      <option>Medical</option><option>Safety / Harassment</option>
+      <option>Accident</option><option>Natural Disaster</option>
+      <option>Fire</option><option>Others</option>
+    </select>
+
+    <label class="block text-sm font-medium text-gray-700 mb-1">Severity</label>
+    <select id="emSeverity" class="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-red-500">
+      <option>Critical</option><option>High</option><option>Low</option>
+    </select>
+
+    <label class="block text-sm font-medium text-gray-700 mb-1">Description (Optional)</label>
+    <textarea id="emDesc" rows="3" class="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-red-500 resize-none" placeholder="Briefly describe the emergency..."></textarea>
+
+    <div class="flex gap-3">
+      <button id="sosSendBtn" class="flex-1 bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition focus:outline-none focus:ring-4 focus:ring-red-300">Send SOS Alert</button>
+      <button id="cancelSOS" class="flex-1 border border-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-100 transition">Cancel</button>
+    </div>
+    <p class="text-center text-xs text-gray-500 mt-4">📍 Your location will be shared with nearby responders.</p>
+  </div>
+
+  <!-- Modal with countdown -->
+  <div id="sosModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-backdrop" aria-hidden="true">
+    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full">
+      <h3 class="text-lg font-bold mb-2">Confirm SOS</h3>
+      <p class="text-sm text-gray-600 mb-4">You're about to send an emergency alert with your current location to nearby verified responders. Auto-sending in <span id="countdown">10</span>s.</p>
+      <div class="flex gap-3 justify-end">
+        <button id="sosCancel" class="px-4 py-2 rounded-md border border-gray-300">Cancel</button>
+        <button id="sosConfirm" class="px-4 py-2 rounded-md bg-red-600 text-white font-semibold">Confirm & Send</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP PAGE -->
+<section id="mapPage" class="hidden flex flex-col items-center justify-center min-h-screen bg-gray-50" aria-hidden="true">
+  <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHomeMap" role="button" tabindex="0">⬅ <span class="font-medium text-gray-600">Back</span></div>
+  <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Your Live Location</h2>
+  <div id="map" class="w-11/12 md:w-3/4 lg:w-2/3"></div>
+  <p class="text-sm text-gray-500 mt-4">📍 Location updates automatically if permissions are granted.</p>
+</section>
+
+<!-- VERIFIED NETWORK -->
+<section id="verifiedPage" class="hidden flex flex-col items-center justify-center min-h-screen bg-gray-50" aria-hidden="true">
+  <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHomeVerified" role="button" tabindex="0">⬅ <span class="font-medium text-gray-600">Back</span></div>
+  <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4">🤝 Verified Responders Network</h2>
+  <div class="w-11/12 md:w-3/4 lg:w-1/2 bg-white rounded-2xl shadow-lg p-6">
+    <input type="text" id="searchResponder" placeholder="🔍 Search responders..." class="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-green-500 focus:outline-none"/>
+    <div id="responderList" class="space-y-4"></div>
+  </div>
+</section>
+
+<script>
+  const mainPage = document.getElementById("mainPage");
+  const signinPage = document.getElementById("signinPage");
+  const sosPage = document.getElementById("sosPage");
+  const mapPage = document.getElementById("mapPage");
+  const verifiedPage = document.getElementById("verifiedPage");
+
+  function showPage(page){
+    [mainPage, signinPage, sosPage, mapPage, verifiedPage].forEach(p=>{ p.classList.add('hidden'); p.setAttribute('aria-hidden','true'); });
+    page.classList.remove('hidden'); page.setAttribute('aria-hidden','false');
+    setTimeout(()=>{
+      const focusable = page.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if(focusable) focusable.focus();
+    },40);
+    if(page===mapPage) setTimeout(initializeMap,80);
+  }
+
+  // NAVIGATION
+  document.getElementById("signinBtn").onclick=()=>showPage(signinPage);
+  document.getElementById("getStarted").onclick=()=>showPage(sosPage);
+  document.getElementById("featureSOS").onclick=()=>showPage(sosPage);
+  document.getElementById("featureMap").onclick=()=>showPage(mapPage);
+  document.getElementById("featureVerify").onclick=()=>showVerifiedNetwork();
+  ["backHome1","backHome2","backHomeMap","cancelSOS","backHomeVerified"].forEach(id=>{
+    document.getElementById(id).onclick=()=>showPage(mainPage);
+  });
+
+  // SIGNIN
+  const signinForm = document.getElementById('signinForm');
+  if(signinForm){
+    signinForm.addEventListener('submit', e=>{
+      e.preventDefault();
+      showToast('Signed in (demo)','info'); showPage(mainPage);
+    });
+  }
+
+  // VERIFIED RESPONDERS
+  const responders = [
+    { name: "Dr. Aditi Rao", org: "Red Cross India", role: "Medical Volunteer", distance: "1.2 km", lat:28.6139, lng:77.2090 },
+    { name: "Rajesh Kumar", org: "Disaster Relief NGO", role: "Rescue Operator", distance: "2.5 km", lat:28.6167, lng:77.2300 },
+    { name: "Sonia Mehta", org: "SafeCity Network", role: "Community Volunteer", distance: "3.1 km", lat:28.6200, lng:77.2150 },
+    { name: "Arjun Nair", org: "National Emergency Corps", role: "First Responder", distance: "0.9 km", lat:28.6100, lng:77.2000 },
+  ];
+  const responderListEl = document.getElementById('responderList');
+  const searchEl = document.getElementById('searchResponder');
+  function renderResponders(list){
+    responderListEl.innerHTML = list.map(r=>`
+      <div class="border border-gray-200 rounded-lg p-4 flex justify-between items-center hover:shadow-md transition">
+        <div>
+          <h4 class="font-semibold text-gray-800">${r.name}</h4>
+          <p class="text-sm text-gray-600">${r.role} — ${r.org}</p>
+        </div>
+        <span class="text-xs bg-green-100 text-green-600 font-semibold px-2 py-1 rounded">${r.distance}</span>
+      </div>
+    `).join('');
+  }
+  if(searchEl) searchEl.addEventListener('input', e=>{
+    const q=e.target.value.toLowerCase();
+    renderResponders(responders.filter(r=>r.name.toLowerCase().includes(q)||r.role.toLowerCase().includes(q)||r.org.toLowerCase().includes(q)));
+  });
+  function showVerifiedNetwork(){ renderResponders(responders); showPage(verifiedPage); }
+
+  // SOS modal + countdown
+  const sosSendBtn = document.getElementById('sosSendBtn');
+  const sosModal = document.getElementById('sosModal');
+  const sosConfirm = document.getElementById('sosConfirm');
+  const countdownEl = document.getElementById('countdown');
+  let countdownInterval=null;
+
+  function openSOSModal(){
+    let countdown=10;
+    countdownEl.textContent=countdown;
+    sosModal.classList.remove('hidden'); sosModal.setAttribute('aria-hidden','false');
+    clearInterval(countdownInterval);
+    countdownInterval = setInterval(()=>{
+      countdown--; countdownEl.textContent=countdown;
+      if(countdown<=0){ clearInterval(countdownInterval); sendSOS(); }
+    },1000);
+    sosConfirm.focus();
+  }
+
+  function closeSOSModal(){
+    sosModal.classList.add('hidden'); sosModal.setAttribute('aria-hidden','true'); clearInterval(countdownInterval);
+  }
+
+  function sendSOS(){
+    const details = { type: document.getElementById('emType').value, severity: document.getElementById('emSeverity').value, description: document.getElementById('emDesc').value||'(no description)' };
+    closeSOSModal();
+    showToast('🚨 SOS sent — responders alerted','success');
+    showPage(mainPage);
+    // Placeholder: push to server / Firebase here
+    console.log("SOS details sent:", details);
+  }
+
+  sosSendBtn.onclick=openSOSModal;
+  sosConfirm.onclick=sendSOS;
+  document.getElementById('sosCancel').onclick=closeSOSModal;
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSOSModal(); });
+
+  // TOAST helper
+  const toastHolder=document.getElementById('toastHolder');
+  function showToast(message,type='success',timeout=3500){
+    const t=document.createElement('div');
+    t.className='toast ' + (type==='success'?'toast-success':(type==='info'?'toast-info':'toast-error'));
+    t.textContent=message; toastHolder.appendChild(t);
+    setTimeout(()=>{ t.style.transform='translateY(-6px)'; t.style.opacity='0'; },timeout);
+    setTimeout(()=>{ try{ toastHolder.removeChild(t); }catch(e){} },timeout+400);
+  }
+
+  // LEAFLET MAP
+  let mapInstance=null, userMarker=null, responderCluster=null;
+  function initializeMap(){
+    const mapDiv=document.getElementById('map'); if(!mapDiv) return;
+    if(mapInstance){ try{ mapInstance.remove(); }catch(e){} mapInstance=null; }
+
+    mapInstance=L.map('map',{zoomControl:true}).setView([28.6139,77.2090],13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors'}).addTo(mapInstance);
+
+    const userIcon=L.divIcon({className:'',html:'<span class="user-marker" aria-hidden="true"></span>',iconSize:[20,20],iconAnchor:[10,10]});
+    userMarker=L.marker([28.6139,77.2090],{icon:userIcon}).addTo(mapInstance).bindPopup('📍 You are here');
+
+    if(navigator.geolocation){
+      navigator.geolocation.watchPosition(pos=>{
+        const {latitude:lat,longitude:lon}=pos.coords;
+        mapInstance.setView([lat,lon],15);
+        userMarker.setLatLng([lat,lon]);
+        if(responderCluster) responderCluster.clearLayers();
+        responderCluster=L.markerClusterGroup();
+        responders.forEach(r=>{
+          const m=L.marker([r.lat,r.lng]).bindPopup(`<b>${r.name}</b><br>${r.role} — ${r.org}`);
+          responderCluster.addLayer(m);
+        });
+        mapInstance.addLayer(responderCluster);
+      }, err=>{
+        console.warn('Geolocation error',err); showToast('⚠ Unable to access location. Please enable GPS.','error',5000);
+      },{enableHighAccuracy:true,maximumAge:5000,timeout:8000});
+    } else { showToast('❌ Geolocation not supported by this browser.','error'); }
+
+    setTimeout(()=>{ try{ mapInstance.invalidateSize(); }catch(e){} },200);
+  }
+
+  showPage(mainPage);
+</script>
+</body>
+</html>

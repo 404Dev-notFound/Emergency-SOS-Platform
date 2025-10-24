@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RapidResponse - Sign In</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 flex items-center justify-center h-screen relative font-sans">
+
+  <!-- Header -->
+  <header class="absolute top-4 left-8 flex items-center space-x-2">
+    <div class="bg-red-600 p-2 rounded-md">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+    <div>
+      <h1 class="font-semibold text-lg">RapidResponse</h1>
+      <p class="text-sm text-gray-500 -mt-1">Emergency SOS Platform</p>
+    </div>
+  </header>
+
+  <!-- Sign In Modal -->
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 space-y-6">
+    <div class="flex justify-between items-center">
+      <h2 class="text-2xl font-bold">Sign In</h2>
+      <button class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+    </div>
+
+    <!-- Form -->
+    <form class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter your email" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter your password" />
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition">
+        Sign In
+      </button>
+    </form>
+
+    <p class="text-center text-sm text-blue-600 hover:underline cursor-pointer">
+      Don’t have an account? Sign up
+    </p>
+
+    <!-- Divider -->
+    <div class="border-t pt-4 text-center">
+      <p class="text-sm text-gray-600 mb-3">Quick Demo Access:</p>
+      <div class="grid grid-cols-2 gap-3">
+        <button class="border rounded-md py-2 hover:bg-gray-100 font-medium">Citizen</button>
+        <button class="border rounded-md py-2 hover:bg-gray-100 font-medium">Volunteer</button>
+        <button class="border rounded-md py-2 hover:bg-gray-100 font-medium">Doctor</button>
+        <button class="border rounded-md py-2 hover:bg-gray-100 font-medium">Police</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Cards -->
+  <div class="absolute bottom-10 left-10 bg-white p-4 rounded-xl shadow-md max-w-sm">
+    <div class="flex items-start space-x-3">
+      <div class="bg-red-100 p-2 rounded-md">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-semibold">Instant SOS Alerts</h3>
+        <p class="text-sm text-gray-600">One-tap emergency alerts with GPS location sharing to notify nearby responders instantly</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-10 right-10 bg-white p-4 rounded-xl shadow-md max-w-sm">
+    <div class="flex items-start space-x-3">
+      <div class="bg-green-100 p-2 rounded-md">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16M4 12l4 4m-4-4l4-4" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-semibold">Verified Network</h3>
+        <p class="text-sm text-gray-600">Trusted volunteers, NGOs, and emergency services verified and ready to help</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="absolute bottom-4 right-4 flex items-center space-x-2 text-sm text-gray-500">
+    <span class="border px-2 py-1 rounded-lg">Made in Bolt</span>
+  </footer>
+
+</body>
+</html>

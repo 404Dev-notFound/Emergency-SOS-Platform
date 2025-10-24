@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RapidResponse - SOS Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- ✅ Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    .sos-btn {
+      background: #00aeef;
+      border: none;
+      padding: 25px 70px;
+      border-radius: 50px;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 25px rgba(0, 174, 239, 0.6);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .sos-btn:hover { background: #008ac4; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,174,239,0.6); }
+      70% { box-shadow: 0 0 0 25px rgba(0,174,239,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,174,239,0); }
+    }
+    #map { height: 80vh; width: 100%; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    #mapPage, #signinPage, #sosPage { display: none; }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+
+  <!-- 🏠 MAIN PAGE -->
+  <section id="mainPage">
+    <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center gap-3">
+            <div class="bg-red-600 p-2 rounded-lg">⚠️</div>
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">RapidResponse</h1>
+              <p class="text-xs text-gray-500">Emergency SOS Platform</p>
+            </div>
+          </div>
+          <button id="signinBtn" class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
+            🔑 Sign In
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Emergency Response Platform</h2>
+      <p class="text-xl text-gray-600 mb-8">
+        Connecting people in emergencies with verified responders in real-time
+      </p>
+      <button id="getStarted" class="inline-flex items-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg transition-colors">
+        SOS
+      </button>
+    </main>
+  </section>
+
+  <!-- 🗺️ MAP PAGE -->
+  <section id="mapPage" class="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHomeMap">
+      ⬅️ <span class="font-medium text-gray-600">Back</span>
+    </div>
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Your Live Location</h2>
+    <div id="map" class="w-11/12 md:w-3/4 lg:w-2/3"></div>
+  </section>
+
+  <!-- 🔑 SIGN-IN PAGE -->
+  <section id="signinPage" class="flex items-center justify-center min-h-screen bg-gray-50 relative">
+    <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHomeSignIn">
+      ⬅️ <span class="font-medium text-gray-600">Back</span>
+    </div>
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
+      <h2 class="text-2xl font-bold mb-6 text-center">Sign In</h2>
+      <form id="signinForm" class="space-y-4">
+        <input type="email" required placeholder="Email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500" />
+        <input type="password" required placeholder="Password" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500" />
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition">Sign In</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 🚨 SOS PAGE -->
+  <section id="sosPage" class="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHomeSOS">
+      ⬅️ <span class="font-medium text-gray-600">Back</span>
+    </div>
+    <h2 class="text-3xl font-bold text-gray-900 mb-6">Emergency SOS</h2>
+    <button id="sosBtn" class="sos-btn">🚨 SEND SOS</button>
+  </section>
+
+  <!-- 🧠 SCRIPT -->
+  <script>
+    const mainPage = document.getElementById("mainPage");
+    const mapPage = document.getElementById("mapPage");
+    const signinPage = document.getElementById("signinPage");
+    const sosPage = document.getElementById("sosPage");
+
+    // Navigation
+    document.getElementById("signinBtn").onclick = () => {
+      mainPage.style.display = "none";
+      signinPage.style.display = "flex";
+    };
+
+    document.getElementById("getStarted").onclick = () => {
+      mainPage.style.display = "none";
+      sosPage.style.display = "flex";
+    };
+
+    document.getElementById("backHomeSignIn").onclick = () => {
+      signinPage.style.display = "none";
+      mainPage.style.display = "block";
+    };
+
+    document.getElementById("backHomeSOS").onclick = () => {
+      sosPage.style.display = "none";
+      mainPage.style.display = "block";
+    };
+
+    document.getElementById("backHomeMap").onclick = () => {
+      mapPage.style.display = "none";
+      mainPage.style.display = "block";
+    };
+
+    document.getElementById("sosBtn").onclick = () => {
+      alert("🚨 SOS Sent! Rescuers Notified.");
+    };
+
+    // Initialize map
+    function initializeMap() {
+      const mapDiv = document.getElementById("map");
+      mapDiv.innerHTML = "";
+      const map = L.map("map").setView([0, 0], 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      const marker = L.marker([0, 0]).addTo(map).bindPopup("📍 You are here").openPopup();
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            map.setView([lat, lon], 15);
+            marker.setLatLng([lat, lon]);
+          },
+          () => alert("⚠️ Enable GPS to show location."),
+          { enableHighAccuracy: true }
+        );
+      }
+    }
+
+    // Map feature click
+    document.getElementById("featureMap")?.addEventListener("click", () => {
+      mainPage.style.display = "none";
+      mapPage.style.display = "flex";
+      initializeMap();
+    });
+  </script>
+</body>
+</html>

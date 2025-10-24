@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RapidResponse Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- ======= NAVBAR ======= -->
+  <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <!-- Left: Logo -->
+      <div class="flex items-center gap-2">
+        <div class="bg-red-600 p-2 rounded-lg">
+          <span class="text-white text-xl">⚠</span>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg">RapidResponse</h1>
+          <p class="text-xs text-gray-500">Emergency SOS Platform</p>
+        </div>
+      </div>
+
+      <!-- Center: Nav Links -->
+      <div class="hidden md:flex space-x-6">
+        <a href="#" class="text-gray-600 hover:text-blue-600">Alert Feed</a>
+        <a href="#" class="text-gray-600 hover:text-blue-600">Live Map</a>
+        <a href="#" class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Dashboard</a>
+        <a href="#" class="text-gray-600 hover:text-blue-600">Analytics</a>
+      </div>
+
+      <!-- Right: User -->
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <p class="font-medium text-sm">Demo Citizen</p>
+          <span class="bg-blue-100 text-blue-700 text-xs font-medium px-2 py-1 rounded-full">Citizen</span>
+        </div>
+        <button class="text-gray-500 hover:text-red-600 transition">
+          ⎋
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======= MAIN DASHBOARD ======= -->
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- Welcome Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl p-6">
+      <h2 class="text-2xl font-semibold">Welcome back, Demo Citizen</h2>
+      <p class="text-blue-100 text-sm">Responder Dashboard</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm text-gray-500">Active Alerts</h3>
+            <p class="text-3xl font-bold mt-1">2</p>
+          </div>
+          <span class="text-red-500 text-2xl">⚠</span>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm text-gray-500">My Responses</h3>
+            <p class="text-3xl font-bold mt-1">0</p>
+          </div>
+          <span class="text-blue-500 text-2xl">👤</span>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm text-gray-500">Currently Responding</h3>
+            <p class="text-3xl font-bold mt-1">0</p>
+          </div>
+          <span class="text-green-500 text-2xl">💓</span>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm text-gray-500">Avg Response Time</h3>
+            <p class="text-3xl font-bold mt-1">4.2 min</p>
+          </div>
+          <span class="text-purple-500 text-2xl">⏱</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nearby Alerts + Active Responses -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Nearby Active Alerts -->
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <h3 class="text-lg font-semibold flex items-center gap-2 mb-4">
+          <span class="text-red-500 text-xl">⚠</span> Nearby Active Alerts
+        </h3>
+
+        <!-- Alert 1 -->
+        <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-sm transition">
+          <div class="flex justify-between items-center mb-1">
+            <h4 class="font-semibold text-gray-800">Medical Emergency</h4>
+            <span class="text-xs bg-orange-100 text-orange-600 font-semibold px-2 py-1 rounded">high</span>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">Emergency medical assistance needed</p>
+          <div class="text-xs text-gray-500 flex items-center gap-4">
+            <span>📍 Current Location</span>
+            <span>👥 0 responding</span>
+          </div>
+        </div>
+
+        <!-- Alert 2 -->
+        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition">
+          <div class="flex justify-between items-center mb-1">
+            <h4 class="font-semibold text-gray-800">Accident Emergency</h4>
+            <span class="text-xs bg-red-100 text-red-600 font-semibold px-2 py-1 rounded">critical</span>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">Emergency accident assistance needed</p>
+          <div class="text-xs text-gray-500 flex items-center gap-4">
+            <span>📍 Current Location</span>
+            <span>👥 0 responding</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Active Responses -->
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <h3 class="text-lg font-semibold flex items-center gap-2 mb-4">
+          <span class="text-blue-500 text-xl">📡</span> My Active Responses
+        </h3>
+        <div class="text-sm text-gray-600 text-center py-10 border border-dashed border-gray-300 rounded-lg">
+          No active responses <br />
+          <span class="text-gray-400 text-xs">Check nearby alerts to respond</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Response History -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h3 class="text-lg font-semibold flex items-center gap-2 mb-4">
+        <span class="text-green-500 text-xl">🕒</span> Response History
+      </h3>
+      <div class="text-sm text-gray-600 text-center py-10 border border-dashed border-gray-300 rounded-lg">
+        No response history yet
+      </div>
+    </div>
+  </main>
+
+  <!-- ======= FOOTER ======= -->
+  <footer class="text-center text-gray-500 text-sm py-6 border-t mt-8">
+    © 2025 RapidResponse | Emergency SOS Platform
+  </footer>
+
+  <!-- ======= SCRIPT ======= -->
+  <script>
+    // Future dynamic updates could go here (e.g., fetch alerts, update counts)
+    console.log("Dashboard loaded successfully ✅");
+  </script>
+</body>
+</html>

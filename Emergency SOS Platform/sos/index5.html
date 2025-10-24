@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RapidResponse - SOS Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ Leaflet CSS + JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    .sos-btn {
+      background: #00aeef;
+      border: none;
+      padding: 25px 70px;
+      border-radius: 50px;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 25px rgba(0, 174, 239, 0.6);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .sos-btn:hover { background: #008ac4; }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,174,239,0.6); }
+      70% { box-shadow: 0 0 0 25px rgba(0,174,239,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,174,239,0); }
+    }
+
+    .feature-box {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .feature-box:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12);
+      border-color: #3b82f6;
+    }
+
+    #map { height: 80vh; width: 100%; border-radius: 12px; }
+    #mapPage, #signinPage, #sosPage { display: none; }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+
+  <!-- ========== MAIN PAGE ========== -->
+  <section id="mainPage">
+    <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center gap-3">
+            <div class="bg-red-600 p-2 rounded-lg">⚠</div>
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">RapidResponse</h1>
+              <p class="text-xs text-gray-500">Emergency SOS Platform</p>
+            </div>
+          </div>
+          <button id="signinBtn" class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
+            🔑 Sign In
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Emergency Response Platform</h2>
+      <p class="text-xl text-gray-600 mb-8">Connecting people in emergencies with verified responders in real-time</p>
+
+      <button id="getStarted" class="inline-flex items-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg transition-colors">
+        🚨 SOS
+      </button>
+
+      <!-- Features -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-12 text-left">
+        <div id="featureSOS" class="feature-box bg-white rounded-xl shadow-md p-6 border border-gray-200">
+          <div class="bg-red-50 p-3 rounded-lg w-fit mb-4">🚨</div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Instant SOS Alerts</h3>
+          <p class="text-gray-600">One-tap emergency alerts with GPS location sharing to notify nearby responders instantly.</p>
+        </div>
+        <div id="featureMap" class="feature-box bg-white rounded-xl shadow-md p-6 border border-gray-200">
+          <div class="bg-blue-50 p-3 rounded-lg w-fit mb-4">🗺</div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Real-Time Mapping</h3>
+          <p class="text-gray-600">Live tracking of emergencies and responders with intelligent routing for fastest response.</p>
+        </div>
+        <div id="featureVerify" class="feature-box bg-white rounded-xl shadow-md p-6 border border-gray-200">
+          <div class="bg-green-50 p-3 rounded-lg w-fit mb-4">🤝</div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Verified Network</h3>
+          <p class="text-gray-600">Trusted volunteers, NGOs, and emergency services verified and ready to help.</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-600">
+        RapidResponse - Emergency SOS Platform for coordinated disaster response
+      </div>
+    </footer>
+  </section>
+
+  <!-- ========== SIGN-IN PAGE ========== -->
+  <section id="signinPage" class="flex items-center justify-center min-h-screen bg-gray-50 relative">
+    <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHome1">⬅ <span class="font-medium text-gray-600">Back</span></div>
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 space-y-6">
+      <h2 class="text-2xl font-bold text-center mb-4">Sign In</h2>
+      <form class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter your email" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Password</label>
+          <input type="password" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter your password" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Attach Valid Govt ID Proof</label>
+          <input type="file" accept=".jpg,.jpeg,.png,.pdf" class="w-full border border-gray-300 rounded-md p-2" />
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition">Sign In</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========== SOS PAGE ========== -->
+  <section id="sosPage" class="flex items-center justify-center min-h-screen bg-gray-100 relative">
+    <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHome2">⬅ <span class="font-medium text-gray-600">Back</span></div>
+    <div class="bg-white shadow-lg rounded-2xl w-full max-w-md p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-2xl">🚨</span>
+        <h2 class="text-xl font-semibold text-gray-900">Emergency SOS</h2>
+      </div>
+
+      <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Type</label>
+      <select class="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-red-500">
+        <option>Medical</option><option>Safety / Harassment</option>
+        <option>Accident</option><option>Natural Disaster</option>
+        <option>Fire</option><option>Others</option>
+      </select>
+
+      <label class="block text-sm font-medium text-gray-700 mb-1">Severity</label>
+      <select class="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-red-500">
+        <option>Critical</option><option>High</option><option>Low</option>
+      </select>
+
+      <label class="block text-sm font-medium text-gray-700 mb-1">Description (Optional)</label>
+      <textarea rows="3" class="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-red-500 resize-none" placeholder="Briefly describe the emergency..."></textarea>
+
+      <div class="flex gap-3">
+        <button id="sosSendBtn" class="flex-1 bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition">Send SOS Alert</button>
+        <button id="cancelSOS" class="flex-1 border border-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-100 transition">Cancel</button>
+      </div>
+
+      <p class="text-center text-xs text-gray-500 mt-4">📍 Your location will be shared with nearby responders.</p>
+    </div>
+  </section>
+
+  <!-- ========== MAP PAGE ========== -->
+  <section id="mapPage" class="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div class="absolute top-4 left-8 flex items-center space-x-2 cursor-pointer" id="backHomeMap">⬅ <span class="font-medium text-gray-600">Back</span></div>
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Your Live Location</h2>
+    <div id="map" class="w-11/12 md:w-3/4 lg:w-2/3"></div>
+    <p class="text-sm text-gray-500 mt-4">📍 Location updates automatically if permissions are granted.</p>
+  </section>
+
+  <!-- ========== SCRIPT ========== -->
+  <script>
+    const mainPage = document.getElementById("mainPage");
+    const signinPage = document.getElementById("signinPage");
+    const sosPage = document.getElementById("sosPage");
+    const mapPage = document.getElementById("mapPage");
+
+    // Navigation Buttons
+    document.getElementById("signinBtn").onclick = () => showPage(signinPage);
+    document.getElementById("getStarted").onclick = () => showPage(sosPage);
+    document.getElementById("featureSOS").onclick = () => showPage(sosPage);
+    document.getElementById("featureMap").onclick = () => { showPage(mapPage); initializeMap(); };
+    document.getElementById("featureVerify").onclick = () => alert("🤝 Verified Network feature coming soon!");
+
+    document.getElementById("backHome1").onclick = () => showPage(mainPage);
+    document.getElementById("backHome2").onclick = () => showPage(mainPage);
+    document.getElementById("backHomeMap").onclick = () => showPage(mainPage);
+    document.getElementById("cancelSOS").onclick = () => showPage(mainPage);
+
+    // Page toggle helper
+    function showPage(page) {
+      [mainPage, signinPage, sosPage, mapPage].forEach(p => p.style.display = "none");
+      page.style.display = "flex";
+    }
+
+    // SOS Send button
+    document.getElementById("sosSendBtn").onclick = () => alert("🚨 SOS alert sent successfully! Nearby responders notified.");
+
+    // === Initialize Live Map ===
+    function initializeMap() {
+      const mapDiv = document.getElementById("map");
+      mapDiv.innerHTML = "";
+      const map = L.map("map").setView([0, 0], 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      const marker = L.marker([0, 0]).addTo(map).bindPopup("📍 You are here").openPopup();
+
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (pos) => {
+            const { latitude: lat, longitude: lon } = pos.coords;
+            map.setView([lat, lon], 15);
+            marker.setLatLng([lat, lon]);
+          },
+          () => alert("⚠ Unable to access location. Please enable GPS."),
+          { enableHighAccuracy: true }
+        );
+      } else {
+        alert("❌ Geolocation not supported by this browser.");
+      }
+    }
+  </script>
+</body>
+</html>

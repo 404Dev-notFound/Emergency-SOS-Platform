@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOS System</title>
+  <style>
+    /* === Base Styling === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: radial-gradient(circle at top left, #2a003e, #0a001a);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    /* === Floating background lights === */
+    .light {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.6;
+      animation: float 10s infinite alternate ease-in-out;
+    }
+
+    .light:nth-child(1) {
+      top: 10%;
+      left: 15%;
+      width: 200px;
+      height: 200px;
+      background: #7a00ff;
+      animation-delay: 0s;
+    }
+
+    .light:nth-child(2) {
+      bottom: 20%;
+      right: 10%;
+      width: 300px;
+      height: 300px;
+      background: #00e5ff;
+      animation-delay: 2s;
+    }
+
+    .light:nth-child(3) {
+      bottom: 0;
+      left: 40%;
+      width: 250px;
+      height: 250px;
+      background: #ff004c;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0px) scale(1); }
+      to { transform: translateY(-50px) scale(1.1); }
+    }
+
+    /* === Header Bar === */
+    header {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 80px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      font-size: 1.8em;
+      font-weight: 700;
+      color: #00e0ff;
+      letter-spacing: 1px;
+    }
+
+    .signin-btn {
+      background: linear-gradient(90deg, #00b3ff, #00ffe0);
+      color: #fff;
+      border: none;
+      padding: 10px 26px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 500;
+      box-shadow: 0 0 12px #00d4ff80;
+      transition: all 0.3s;
+    }
+
+    .signin-btn:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 20px #00d4ffcc;
+    }
+
+    /* === Hero Section === */
+    .hero {
+      text-align: center;
+      padding: 60px 40px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+      width: 85%;
+      max-width: 600px;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: 2.6em;
+      font-weight: 700;
+      background: linear-gradient(90deg, #00e0ff, #ff0095);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      color: #ddd;
+      font-size: 1.1em;
+      line-height: 1.6;
+      margin-bottom: 50px;
+    }
+
+    /* === SOS Button === */
+    .sos-btn {
+      position: relative;
+      background: linear-gradient(135deg, #ff004c, #ff007f);
+      border: none;
+      padding: 20px 70px;
+      border-radius: 50px;
+      color: white;
+      font-size: 1.3em;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 0 30px #ff005980;
+      transition: 0.3s;
+      overflow: hidden;
+    }
+
+    .sos-btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transition: 0.5s;
+    }
+
+    .sos-btn:hover::after {
+      left: 100%;
+    }
+
+    .sos-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px #ff007f;
+    }
+
+    /* === Footer === */
+    footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9em;
+      color: #bbb;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Floating Lights -->
+  <div class="light"></div>
+  <div class="light"></div>
+  <div class="light"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">⚡ SOS System</div>
+    <button id="signinBtn" class="signin-btn">Sign In</button>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1>Stay Safe, Stay Connected</h1>
+    <p>Your one-tap emergency response system — designed to protect, alert, and assist in any situation.</p>
+    <button class="sos-btn">🚨 Request SOS</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>Made with ❤️ by Team Innovators</footer>
+
+  <script>
+    // Redirect on Sign In click
+    document.getElementById("signinBtn").addEventListener("click", () => {
+      window.location.href = "signin.html";
+    });
+  </script>
+</body>
+</html>
